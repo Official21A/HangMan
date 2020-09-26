@@ -1,6 +1,6 @@
 import random
 
-from headers import __find__
+from headers import find, clear, sleep
 
 
 word_list_data = ['data', 'port', 'admin'] # data words for the game
@@ -12,11 +12,13 @@ counter = 0
 game = True
 
 while game == True:
+	sleep()
+	clear()
 	# main while of the game
 	char = input("Guess >> ")
 
 	if len(char) == 1:
-		indexes = __find__(main_word, char)
+		indexes = find(main_word, char)
 
 		if len(indexes) != 0:
 			# the string contains the user char input
