@@ -1,7 +1,7 @@
 import random
 
-def __find__(s, ch):
-    return [i for i, ltr in enumerate(s) if ltr == ch]
+from headers import __find__
+
 
 word_list_data = ['data', 'port', 'admin']
 
