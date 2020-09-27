@@ -1,6 +1,6 @@
 import random
 
-from headers import find, clear, sleep
+import headers as H
 
 
 word_list_data = ['data', 'port', 'admin'] # data words for the game
@@ -11,14 +11,18 @@ word_len = len(main_word)
 counter = 0
 game = True
 
+bool_index = [False for i in range(2 * word_len)]
+
+H.clean()
+
 while game == True:
-	sleep()
-	clear()
 	# main while of the game
+	H.wait()
+
 	char = input("Guess >> ")
 
 	if len(char) == 1:
-		indexes = find(main_word, char)
+		indexes = H.search(main_word, char)
 
 		if len(indexes) != 0:
 			# the string contains the user char input
