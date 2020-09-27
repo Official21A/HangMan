@@ -5,24 +5,14 @@ import headers as H
 
 word_list_data = ['data', 'port', 'admin'] # data words for the game
 
-main_word = random.choice(word_list_data)
-
-word_len = len(main_word)
-counter = 0
 game = True
+counter = 0
 
-bool_index = [False for i in range(2 * word_len)]
 
-H.clean()
-
-while game == True:
-	# main while of the game
-	H.wait()
-
-	H.show(bool_index, main_word)
-
-	char = input("\n\n\tGuess >> ")
-
+def __main_process__(char, main_word, bool_index):
+	# this function is the game check loop
+	global game
+	global counter
 	if len(char) == 1:
 		indexes = H.search(main_word, char)
 
@@ -40,8 +30,24 @@ while game == True:
 			game = False
 		else:
 			print("Incorrect")	
-			
+
 	if counter == word_len:
 		game = False
+
+
+main_word = random.choice(word_list_data)
+word_len = len(main_word)
+bool_index = [False for i in range(2 * word_len)]
+
+H.clean()
+
+while game == True:
+	# main while of the game
+	H.wait()
+
+	H.show(bool_index, main_word)
+
+	char = input("\n\n\tGuess >> ")
+	__main_process__(char, main_word, bool_index)
 
 print(main_word)						

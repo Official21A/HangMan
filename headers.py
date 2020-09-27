@@ -15,7 +15,13 @@ def wait():
 	# this function is for setting a waiting time
 	time.sleep(0.5)
 
+def update(bool_index, indexes):
+	# this function updates the boolean indexes
+	for i in indexes:
+		bool_index[2 * i] = True		
+
 def show(bool_index, word):
+	# this function prints the current status of word
 	word_len = len(word)	
 	for i in range(2 * word_len):
 		if i % 2 == 1:
@@ -25,8 +31,4 @@ def show(bool_index, word):
 				index = int(i / 2)
 				print(word[index], end = ' ')	
 			else:
-				print("_", end = ' ')	
-
-def update(bool_index, indexes):
-	for i in indexes:
-		bool_index[2 * i] = True				
+				print("_", end = ' ')				
