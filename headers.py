@@ -23,6 +23,7 @@ def update(bool_index, indexes):
 def show(bool_index, word):
 	# this function prints the current status of word
 	word_len = len(word)	
+	print()
 	for i in range(2 * word_len):
 		if i % 2 == 1:
 			print("", end=' ')
