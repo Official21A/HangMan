@@ -19,14 +19,16 @@ while game == True:
 	# main while of the game
 	H.wait()
 
-	char = input("Guess >> ")
+	H.show(bool_index, main_word)
+
+	char = input("\n\n\tGuess >> ")
 
 	if len(char) == 1:
 		indexes = H.search(main_word, char)
 
 		if len(indexes) != 0:
 			# the string contains the user char input
-			print(f"It has {len(indexes)} {char}.")
+			H.update(bool_index, indexes)
 			counter += len(indexes)
 		else:
 			# no char in string
