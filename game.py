@@ -8,28 +8,34 @@ word_list_data = ['data', 'port', 'admin'] # data words for the game
 
 game = True
 counter = 0
+game_limit = 0
 
 
-def __input__():
+def __input__(limit):
 	# this function does the input getting
-	return input("\n\n\tGuess >> ")
+	global game_limit
+	return input(f"\n\n  {game_limit} turns remain, Guess >> ")
 
 def __output__(code, state):
 	# this function does the output showing
 	if code == 1:
-		print(f"\nNo {state}.")
+		print(f"{Fore.YELLOW}No {state}.")
 	elif code == 2:
-		print("\nCorrect")
+		print(f"{Fore.GREEN}Correct")
 	elif code == 3:
-		print("\nIncorrect")
+		print(f"\n{Fore.RED}Incorrect")
 	elif code == 4:
-		print(f"\"{state}\" was the correct word.")				
+		print(f"\"{state}\" was the correct word.")	
+	elif code == 5:
+		print(f"\n{Fore.RED}Sorry, you lost.")	
+	print(f"{Fore.RESET}", end='')				
 
 
 def __main_process__(char, main_word, bool_index):
 	# this function is the game check loop
 	global game
 	global counter
+	global game_limit
 	code = -1
 	if len(char) == 1:
 		indexes = H.search(main_word, char)
@@ -54,11 +60,17 @@ def __main_process__(char, main_word, bool_index):
 		code = 2
 		game = False
 
+	if game_limit == 0:
+		code = 5
+		game = False
+
+	game_limit -= 1	
 	return code	
 
 
 main_word = random.choice(word_list_data)
 word_len = len(main_word)
+game_limit = word_len
 bool_index = [False for i in range(2 * word_len)]
 
 H.clean()
@@ -69,7 +81,7 @@ while game == True:
 
 	H.show(bool_index, main_word)
 
-	char = __input__().lower()
+	char = __input__(word_len).lower()
 	code = __main_process__(char, main_word, bool_index)
 	__output__(code, char)						
 
