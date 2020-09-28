@@ -1,10 +1,10 @@
-import random
+from random_words import RandomWords
 from colorama import Fore
 
 import headers as H
 
 
-word_list_data = ['data', 'port', 'admin'] # data words for the game
+r = RandomWords() # data words for the game
 
 game = True
 counter = 0
@@ -68,7 +68,7 @@ def __main_process__(char, main_word, bool_index):
 	return code	
 
 
-main_word = random.choice(word_list_data)
+main_word = r.random_word()
 word_len = len(main_word)
 game_limit = word_len
 bool_index = [False for i in range(2 * word_len)]
