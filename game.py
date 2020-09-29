@@ -9,12 +9,15 @@ r = RandomWords() # data words for the game
 game = True
 counter = 0
 game_limit = 0
+game_hints = 100
 
 
 def __input__(limit):
 	# this function does the input getting
 	global game_limit
-	return input(f"\n\n  {game_limit} turns remain, Guess >> ")
+	global game_hints
+	return input(
+		f"\n\n  {game_limit} turns remain, and {game_hints} hints; Guess >> ")
 
 def __output__(code, state):
 	# this function does the output showing
@@ -28,6 +31,8 @@ def __output__(code, state):
 		print(f"\"{state}\" was the correct word.")	
 	elif code == 5:
 		print(f"\n{Fore.RED}Sorry, you lost.")	
+	elif code == -1:
+		print(f"\n{Fore.RED}Sorry, No hints remain.")
 	print(f"{Fore.RESET}", end='')				
 
 
@@ -36,6 +41,7 @@ def __main_process__(char, main_word, bool_index):
 	global game
 	global counter
 	global game_limit
+	global game_hints
 	code = -1
 	if len(char) == 1:
 		indexes = H.search(main_word, char)
@@ -55,6 +61,16 @@ def __main_process__(char, main_word, bool_index):
 			game = False
 		else:
 			code = 3	
+
+		if char == "hint()":
+			if game_hints > 0:
+				H.hint(bool_index, main_word)	
+				game_hints -= 1
+				game_limit += 1
+				counter += 1
+				code = 0
+			else:
+				code = -1	
 
 	if counter == word_len:
 		code = 2
