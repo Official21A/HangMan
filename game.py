@@ -19,11 +19,11 @@ r = RandomWords() # data words for the game
 game = True
 counter = 0
 game_limit = 0
-game_hints = 100
 
 main_word = r.random_word()
 word_len = len(main_word)
 game_limit = word_len
+game_hints = int(game_limit / 2)
 bool_index = [False for i in range(2 * word_len)]
 
 
@@ -35,13 +35,17 @@ def __main_process__(char):
 	global game_hints
 	global main_word
 	global bool_index
+
+	if not game:
+		return
+
 	if len(char) == 1:
 		indexes = H.search(main_word, char)
 
 		if len(indexes) != 0:
 			# the string contains the user char input
 			H.update(bool_index, indexes)
-			counter += len(indexes)0
+			counter += len(indexes)
 	else:
 		# less or more than one words compare differently
 		if char == main_word:
@@ -53,12 +57,15 @@ def __main_process__(char):
 				game_hints -= 1
 				game_limit += 1
 				counter += 1
+			else:
+				return	
 
 	if counter == word_len:
 		game = False
 
 	if game_limit == 0:
 		game = False
+		game_limit += 1
 
 	game_limit -= 1	
 
@@ -73,14 +80,14 @@ def word_output():
 			string.append(" ")
 		else:
 			if bool_index[i]:
-				string.append(word[i / 2])
+				string.append(word[int(i / 2)])
 			else:
 				string.append("_")	
 	return "".join(string)			
 
 
 class HmGui(QMainWindow):
-	def __init__(self):
+    def __init__(self):
         super().__init__()
         
         self.setWindowTitle('HangMan')
@@ -93,9 +100,11 @@ class HmGui(QMainWindow):
         
         self._createDisplay()
         self._createButtons()
+        self.setDisplayText()
+        self.updateDisplay()
 
     def _createDisplay(self):
-    	self.display = QLineEdit()
+        self.display = QLineEdit()
         self.input = QLineEdit()
         self.user_info = QLabel()
         
@@ -104,10 +113,8 @@ class HmGui(QMainWindow):
         self.display.setReadOnly(True)
 
         self.input.setFixedHeight(35)
-        self.input.setFixedWidth(100)
 
         self.user_info.setFixedHeight(35)
-        self.user_info.setFixedWidth(50)
         self.user_info.setAlignment(Qt.AlignCenter)
 
         self.generalLayout.addWidget(self.display)
@@ -116,30 +123,31 @@ class HmGui(QMainWindow):
 
     def _createButtons(self):
     	buttonsLayout = QGridLayout()
-    	cancel = QPushButton("DELETE")
-    	hint = QPushButton("HINT")
-    	enter = QPushButton("ENTER")
+    	self.cancel = QPushButton("DELETE")
+    	self.hint = QPushButton("HINT")
+    	self.enter = QPushButton("ENTER")
 
-    	cancel.setFixedSize(80, 40)
-        buttonsLayout.addWidget(cancel, 0, 0, 1, 0)
+    	self.cancel.setFixedSize(320, 40)
+    	buttonsLayout.addWidget(self.cancel, 0, 0, 1, 0)
 
-        hint.setFixedSize(40, 40)
-        buttonsLayout.addWidget(hint, 0, 1)
+    	self.hint.setFixedSize(80, 40)
+    	buttonsLayout.addWidget(self.hint, 1, 0)
 
-        enter.setFixedSize(40, 40)
-        enter.addWidget(cancel, 1, 1)
+    	self.enter.setFixedSize(80, 40)
+    	buttonsLayout.addWidget(self.enter, 1, 1)
 
-        self.generalLayout.addLayout(buttonsLayout)
+    	self.generalLayout.addLayout(buttonsLayout)
 
-    def setDisplayText():
+    def setDisplayText(self):
         self.display.setText(word_output())
         self.input.setFocus()
 
     def displayText(self):
-        return self.input.text()
+    	self.clearDisplay()
+        return self.input.text().lower()
 
     def clearDisplay(self):
-        self.input.setText('').lower()
+        self.input.setText('')
 
     def updateDisplay(self):
     	string = f"Hints {game_hints} / Turns {game_limit}" 
@@ -147,21 +155,34 @@ class HmGui(QMainWindow):
 
 
 class HmController:
-	def __init__(self, view, model):
+    def __init__(self, view, model):
         self._view = view
         self._input = model
 
         self._connectSignals()
 
     def _connectSignals(self):
-    	cancel.clicked.connect(self._view.clearDisplay())
-    	hint.clicked.connect(partial(self.click_btn, "hint()"))
-    	enter.clicked.connect(partial(self.click_btn, self._view.displayText()))
+    	self._view.cancel.clicked.connect(self._view.clearDisplay)
+    	self._view.hint.clicked.connect(partial(self.click_btn, "hint()"))
+    	self._view.enter.clicked.connect(partial(self.click_btn, self._view.displayText()))
     	
     def click_btn(self, char):
-    	partial(_input, char)
+    	__main_process__(char)
     	self._view.setDisplayText()
     	self._view.updateDisplay()	
 
 
 def main():
+    hm_app = QApplication(sys.argv)
+    
+    view = HmGui()
+    view.show()
+    
+    model = __main_process__
+
+    HmController(model=model, view=view)
+    
+    sys.exit(hm_app.exec_())
+
+if __name__ == '__main__':
+    main()    
