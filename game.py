@@ -1,5 +1,15 @@
 from random_words import RandomWords
 from colorama import Fore
+import sys
+
+from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QLabel
+from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QGridLayout
+from PyQt5.QtWidgets import QLineEdit
+from PyQt5.QtWidgets import QPushButton
+from PyQt5.QtWidgets import QVBoxLayout
+
+from functools import partial
 
 import headers as H
 
@@ -11,29 +21,10 @@ counter = 0
 game_limit = 0
 game_hints = 100
 
-
-def __input__(limit):
-	# this function does the input getting
-	global game_limit
-	global game_hints
-	return input(
-		f"\n\n  {game_limit} turns remain, and {game_hints} hints; Guess >> ")
-
-def __output__(code, state):
-	# this function does the output showing
-	if code == 1:
-		print(f"{Fore.YELLOW}No {state}.")
-	elif code == 2:
-		print(f"{Fore.GREEN}Correct")
-	elif code == 3:
-		print(f"\n{Fore.RED}Incorrect")
-	elif code == 4:
-		print(f"\"{state}\" was the correct word.")	
-	elif code == 5:
-		print(f"\n{Fore.RED}Sorry, you lost.")	
-	elif code == -1:
-		print(f"\n{Fore.RED}Sorry, No hints remain.")
-	print(f"{Fore.RESET}", end='')				
+main_word = r.random_word()
+word_len = len(main_word)
+game_limit = word_len
+bool_index = [False for i in range(2 * word_len)]
 
 
 def __main_process__(char, main_word, bool_index):
@@ -42,25 +33,17 @@ def __main_process__(char, main_word, bool_index):
 	global counter
 	global game_limit
 	global game_hints
-	code = -1
 	if len(char) == 1:
 		indexes = H.search(main_word, char)
 
 		if len(indexes) != 0:
 			# the string contains the user char input
 			H.update(bool_index, indexes)
-			counter += len(indexes)
-			code = 0
-		else:
-			# no char in string
-			code = 1	
+			counter += len(indexes)0
 	else:
 		# less or more than one words compare differently
 		if char == main_word:
-			code = 2
-			game = False
-		else:
-			code = 3	
+			game = False	
 
 		if char == "hint()":
 			if game_hints > 0:
@@ -68,34 +51,88 @@ def __main_process__(char, main_word, bool_index):
 				game_hints -= 1
 				game_limit += 1
 				counter += 1
-				code = 0
-			else:
-				code = -1	
 
 	if counter == word_len:
-		code = 2
 		game = False
 
 	if game_limit == 0:
-		code = 5
 		game = False
 
 	game_limit -= 1	
-	return code	
 
 
-main_word = r.random_word()
-word_len = len(main_word)
-game_limit = word_len
-bool_index = [False for i in range(2 * word_len)]
+def word_output():
+	global main_word
+	global bool_index
+	string = []
+	word = list(main_word)
+	for i in range(len(bool_index)):
+		if i % 2 == 1:	
+			string.append(" ")
+		else:
+			if bool_index[i]:
+				string.append(word[i / 2])
+			else:
+				string.append("_")	
+	return "".join(string)			
 
-H.clean()
+
+class HmGui(QMainWindow):
+	def __init__(self):
+        super().__init__()
+        
+        self.setWindowTitle('HangMan')
+        self.setFixedSize(500, 500)
+        
+        self.generalLayout = QVBoxLayout()
+        self._centralWidget = QWidget(self)
+        self.setCentralWidget(self._centralWidget)
+        self._centralWidget.setLayout(self.generalLayout)
+        
+        self._createDisplay()
+        self._createButtons()
+
+    def _createDisplay(self):
+    	self.display = QLineEdit()
+        self.input = QLineEdit()
+        self.user_info = QLabel()
+        
+        self.display.setFixedHeight(35)
+        self.display.setAlignment(Qt.AlignCenter)
+        self.display.setReadOnly(True)
+
+        self.input.setFixedHeight(35)
+        self.input.setFixedWidth(100)
+
+        self.user_info.setFixedHeight(35)
+        self.user_info.setFixedWidth(50)
+        self.user_info.setAlignment(Qt.AlignCenter)
+
+        self.generalLayout.addWidget(self.display)
+        self.generalLayout.addWidget(self.user_info)
+        self.generalLayout.addWidget(self.input)
+
+    def _createButtons(self):
+    	buttonsLayout = QGridLayout()
+    	cancel = QPushButton("DELETE")
+    	hint = QPushButton("HINT")
+    	enter = QPushButton("ENTER")
+
+    	cancel.setFixedSize(80, 40)
+        buttonsLayout.addWidget(cancel, 0, 0, 1, 0)
+
+        hint.setFixedSize(40, 40)
+        buttonsLayout.addWidget(hint, 0, 1)
+
+        enter.setFixedSize(40, 40)
+        enter.addWidget(cancel, 1, 1)
+
+        self.generalLayout.addLayout(buttonsLayout)
+
+
 
 while game == True:
 	# main while of the game
-	H.wait()
-
-	H.show(bool_index, main_word)
 
 	char = __input__(word_len).lower()
 	code = __main_process__(char, main_word, bool_index)
