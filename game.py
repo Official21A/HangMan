@@ -27,12 +27,14 @@ game_limit = word_len
 bool_index = [False for i in range(2 * word_len)]
 
 
-def __main_process__(char, main_word, bool_index):
+def __main_process__(char):
 	# this function is the game check loop
 	global game
 	global counter
 	global game_limit
 	global game_hints
+	global main_word
+	global bool_index
 	if len(char) == 1:
 		indexes = H.search(main_word, char)
 
@@ -129,13 +131,37 @@ class HmGui(QMainWindow):
 
         self.generalLayout.addLayout(buttonsLayout)
 
+    def setDisplayText():
+        self.display.setText(word_output())
+        self.input.setFocus()
+
+    def displayText(self):
+        return self.input.text()
+
+    def clearDisplay(self):
+        self.input.setText('').lower()
+
+    def updateDisplay(self):
+    	string = f"Hints {game_hints} / Turns {game_limit}" 
+    	self.user_info.setText(string)  
 
 
-while game == True:
-	# main while of the game
+class HmController:
+	def __init__(self, view, model):
+        self._view = view
+        self._input = model
 
-	char = __input__(word_len).lower()
-	code = __main_process__(char, main_word, bool_index)
-	__output__(code, char)						
+        self._connectSignals()
 
-__output__(4, main_word)
+    def _connectSignals(self):
+    	cancel.clicked.connect(self._view.clearDisplay())
+    	hint.clicked.connect(partial(self.click_btn, "hint()"))
+    	enter.clicked.connect(partial(self.click_btn, self._view.displayText()))
+    	
+    def click_btn(self, char):
+    	partial(_input, char)
+    	self._view.setDisplayText()
+    	self._view.updateDisplay()	
+
+
+def main():
