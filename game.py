@@ -142,10 +142,6 @@ class HmGui(QMainWindow):
         self.display.setText(word_output())
         self.input.setFocus()
 
-    def displayText(self):
-    	self.clearDisplay()
-        return self.input.text().lower()
-
     def clearDisplay(self):
         self.input.setText('')
 
@@ -164,12 +160,16 @@ class HmController:
     def _connectSignals(self):
     	self._view.cancel.clicked.connect(self._view.clearDisplay)
     	self._view.hint.clicked.connect(partial(self.click_btn, "hint()"))
-    	self._view.enter.clicked.connect(partial(self.click_btn, self._view.displayText()))
-    	
+    	self._view.enter.clicked.connect(partial(self.click_btn, "@test"))
+ 
     def click_btn(self, char):
+    	if char == "@test":
+    		char = self._view.input.text().lower()
+    	print(char)	
     	__main_process__(char)
     	self._view.setDisplayText()
-    	self._view.updateDisplay()	
+    	self._view.updateDisplay()
+    	self._view.clearDisplay()	
 
 
 def main():
