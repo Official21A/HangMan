@@ -22,8 +22,8 @@ game_limit = 0
 
 main_word = r.random_word()
 word_len = len(main_word)
-game_limit = word_len
-game_hints = int(game_limit / 2)
+game_limit = 2 * word_len
+game_hints = int(word_len / 2)
 bool_index = [False for i in range(2 * word_len)]
 
 
@@ -119,6 +119,9 @@ class HmGui(QMainWindow):
         self.input.setFixedHeight(35)
 
         self.user_info.setFixedHeight(35)
+        font = self.user_info.font()      # lineedit current font
+        font.setPointSize(16) 
+        self.user_info.setFont(font)
         self.user_info.setAlignment(Qt.AlignCenter)
 
         self.generalLayout.addWidget(self.display)
@@ -150,7 +153,8 @@ class HmGui(QMainWindow):
         self.input.setText('')
 
     def updateDisplay(self):
-    	string = f"Hints {game_hints} / Turns {game_limit}" 
+    	string = f">> {game_limit} Turns remain <<" 
+    	self.hint.setText(f"{game_hints} Hints")
     	self.user_info.setText(string)  
 
 
