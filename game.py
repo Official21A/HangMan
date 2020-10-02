@@ -77,7 +77,7 @@ def word_output():
 	word = list(main_word)
 	for i in range(len(bool_index)):
 		if i % 2 == 1:	
-			string.append(" ")
+			string.append("  ")
 		else:
 			if bool_index[i]:
 				string.append(word[int(i / 2)])
@@ -108,9 +108,13 @@ class HmGui(QMainWindow):
         self.input = QLineEdit()
         self.user_info = QLabel()
         
-        self.display.setFixedHeight(35)
+        self.display.setFixedHeight(50)
+        self.display.setFixedWidth(480)
         self.display.setAlignment(Qt.AlignCenter)
         self.display.setReadOnly(True)
+        font = self.display.font()      # lineedit current font
+        font.setPointSize(20)               # change it's size
+        self.display.setFont(font) 
 
         self.input.setFixedHeight(35)
 
