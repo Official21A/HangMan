@@ -1,5 +1,4 @@
 from random_words import RandomWords
-from colorama import Fore
 import sys
 
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QLabel
@@ -70,22 +69,6 @@ def __main_process__(char):
 	game_limit -= 1	
 
 
-def word_output():
-	global main_word
-	global bool_index
-	string = []
-	word = list(main_word)
-	for i in range(len(bool_index)):
-		if i % 2 == 1:	
-			string.append("  ")
-		else:
-			if bool_index[i]:
-				string.append(word[int(i / 2)])
-			else:
-				string.append("_")	
-	return "".join(string)			
-
-
 class HmGui(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -146,7 +129,8 @@ class HmGui(QMainWindow):
     	self.generalLayout.addLayout(buttonsLayout)
 
     def setDisplayText(self):
-        self.display.setText(word_output())
+        global main_word, bool_index
+        self.display.setText(H.word_output(main_word, bool_index))
         self.input.setFocus()
 
     def clearDisplay(self):
@@ -159,9 +143,8 @@ class HmGui(QMainWindow):
 
 
 class HmController:
-    def __init__(self, view, model):
+    def __init__(self, view):
         self._view = view
-        self._input = model
 
         self._connectSignals()
 
@@ -181,14 +164,14 @@ class HmController:
 
 
 def main():
+    global main_word
     hm_app = QApplication(sys.argv)
     
     view = HmGui()
     view.show()
-    
-    model = __main_process__
 
-    HmController(model=model, view=view)
+    HmController(view=view)
+    print(main_word)
     
     sys.exit(hm_app.exec_())
 
