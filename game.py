@@ -152,9 +152,12 @@ class HmController:
     	self._view.enter.clicked.connect(partial(self.click_btn, "@test"))
  
     def click_btn(self, char):
+    	global game
     	if char == "@test":
     		char = self._view.input.text().lower()
     	print(char)	
+    	if not game:
+    		self._view.enter.clicked.connect(sys.exit(0))
     	__main_process__(char)
     	self._view.setDisplayText()
     	self._view.updateDisplay()
