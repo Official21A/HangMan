@@ -12,6 +12,7 @@ def update(bool_index, indexes):
 		bool_index[2 * i] = True			
 
 def __help__(bool_index):
+	# its a helper function for hint() to create the available indexes
 	bool_list = []
 	for i in range(0, len(bool_index)):
 		if i % 2 == 0 and not bool_index[i]:
@@ -19,7 +20,7 @@ def __help__(bool_index):
 	return bool_list		
 
 def hint(bool_index, word):
-	# this function will show a letter to user
+	# this function will show a letter to user as a hint
 	bool_list = __help__(bool_index)
 	if len(bool_list) == 0:
 		return
@@ -41,6 +42,7 @@ def word_output(main_word, bool_index):
 	return "".join(string)	
 
 def game_done(bool_index):
+	# to revieal the whole word we use this function
 	for i in range(len(bool_index)):
 		if i % 2 == 0:
 			bool_index[i] = True					
