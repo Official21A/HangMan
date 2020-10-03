@@ -27,7 +27,8 @@ bool_index = [False for i in range(2 * word_len)]
 
 
 def __main_process__(char):
-	# this function is the game check loop
+	# the game model
+
 	global game, counter, game_limit, game_hints, main_word, bool_index 
 
 	if not game:
@@ -68,6 +69,7 @@ def __main_process__(char):
 
 
 class HmGui(QMainWindow):
+	# the game view
     def __init__(self):
         super().__init__()
         
@@ -85,6 +87,7 @@ class HmGui(QMainWindow):
         self.updateDisplay()
 
     def _createDisplay(self):
+    	# this method will create and put conmonents in their places
         self.display = QLineEdit()
         self.input = QLineEdit()
         self.user_info = QLabel()
@@ -93,14 +96,14 @@ class HmGui(QMainWindow):
         self.display.setFixedWidth(480)
         self.display.setAlignment(Qt.AlignCenter)
         self.display.setReadOnly(True)
-        font = self.display.font()      # lineedit current font
-        font.setPointSize(20)               # change it's size
+        font = self.display.font()   
+        font.setPointSize(20)             
         self.display.setFont(font) 
 
         self.input.setFixedHeight(35)
 
         self.user_info.setFixedHeight(35)
-        font = self.user_info.font()      # lineedit current font
+        font = self.user_info.font()      
         font.setPointSize(16) 
         self.user_info.setFont(font)
         self.user_info.setAlignment(Qt.AlignCenter)
@@ -110,6 +113,7 @@ class HmGui(QMainWindow):
         self.generalLayout.addWidget(self.input)
 
     def _createButtons(self):
+    	# this method creates the game buttons
     	buttonsLayout = QGridLayout()
     	self.cancel = QPushButton("DELETE")
     	self.hint = QPushButton("HINT")
@@ -127,35 +131,39 @@ class HmGui(QMainWindow):
     	self.generalLayout.addLayout(buttonsLayout)
 
     def setDisplayText(self):
+    	# a method for updating the display after each iterate
         global main_word, bool_index
         self.display.setText(H.word_output(main_word, bool_index))
         self.input.setFocus()
 
     def clearDisplay(self):
+    	# clear input
         self.input.setText('')
 
     def updateDisplay(self):
+    	# this method updates the user information
     	string = f">> {game_limit} Turns remain <<" 
     	self.hint.setText(f"{game_hints} Hints")
     	self.user_info.setText(string)  
 
 
 class HmController:
+	# game controller
     def __init__(self, view):
         self._view = view
-
         self._connectSignals()
 
     def _connectSignals(self):
+    	# this method adds the functions to its buttons
     	self._view.cancel.clicked.connect(self._view.clearDisplay)
     	self._view.hint.clicked.connect(partial(self.click_btn, "hint()"))
     	self._view.enter.clicked.connect(partial(self.click_btn, "@test"))
  
     def click_btn(self, char):
+    	# handel the button clicked
     	global game
     	if char == "@test":
-    		char = self._view.input.text().lower()
-    	print(char)	
+    		char = self._view.input.text().lower()	
     	if not game:
     		self._view.enter.clicked.connect(sys.exit(0))
     	__main_process__(char)
@@ -165,6 +173,7 @@ class HmController:
 
 
 def main():
+	# program runner
     global main_word
     hm_app = QApplication(sys.argv)
     
@@ -176,5 +185,6 @@ def main():
     
     sys.exit(hm_app.exec_())
 
+
 if __name__ == '__main__':
-    main()    
+    main() # Execute    
