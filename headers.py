@@ -38,4 +38,9 @@ def word_output(main_word, bool_index):
 				string.append(word[int(i / 2)])
 			else:
 				string.append("_")	
-	return "".join(string)			
+	return "".join(string)	
+
+def game_done(bool_index):
+	for i in range(len(bool_index)):
+		if i % 2 == 0:
+			bool_index[i] = True					

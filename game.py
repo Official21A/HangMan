@@ -28,29 +28,27 @@ bool_index = [False for i in range(2 * word_len)]
 
 def __main_process__(char):
 	# this function is the game check loop
-	global game
-	global counter
-	global game_limit
-	global game_hints
-	global main_word
-	global bool_index
+	global game, counter, game_limit, game_hints, main_word, bool_index 
 
 	if not game:
+		# this is when the user is out of turns or the user gussed the word
 		return
 
 	if len(char) == 1:
+		# if user input was a single char
 		indexes = H.search(main_word, char)
 
 		if len(indexes) != 0:
-			# the string contains the user char input
 			H.update(bool_index, indexes)
 			counter += len(indexes)
 	else:
 		# less or more than one words compare differently
 		if char == main_word:
-			game = False	
+		    H.game_done(bool_index)
+		    game = False	
 
 		if char == "hint()":
+			# using the hints
 			if game_hints > 0:
 				H.hint(bool_index, main_word)	
 				game_hints -= 1
