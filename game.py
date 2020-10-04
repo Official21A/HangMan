@@ -3,7 +3,7 @@ import sys
 
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QLabel
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QGridLayout
+from PyQt5.QtWidgets import QGridLayout, QMessageBox
 from PyQt5.QtWidgets import QLineEdit
 from PyQt5.QtWidgets import QPushButton
 from PyQt5.QtWidgets import QVBoxLayout
@@ -33,7 +33,7 @@ def __main_process__(char):
 
 	if not game:
 		# this is when the user is out of turns or the user gussed the word
-		return
+		return 
 
 	if len(char) == 1:
 		# if user input was a single char
@@ -151,6 +151,7 @@ class HmController:
 	# game controller
     def __init__(self, view):
         self._view = view
+        self.dialog = Dialog()
         self._connectSignals()
 
     def _connectSignals(self):
@@ -164,12 +165,25 @@ class HmController:
     	global game
     	if char == "@test":
     		char = self._view.input.text().lower()	
-    	if not game:
-    		self._view.enter.clicked.connect(sys.exit(0))
     	__main_process__(char)
     	self._view.setDisplayText()
     	self._view.updateDisplay()
-    	self._view.clearDisplay()	
+    	self._view.clearDisplay()
+    	if not game:
+    		self.dialog.show()	
+
+
+class Dialog:	 	
+
+	def show(self):
+		global main_word
+		msg = QMessageBox()
+		msg.setIcon(QMessageBox.Information)
+		msg.setText(f"The word was \"{main_word}\". Press OK to quit.")
+		msg.setWindowTitle("HangMan")
+		msg.setStandardButtons(QMessageBox.Ok) 
+		msg.exec_()
+		msg.buttonClicked.connect(sys.exit(0))  	
 
 
 def main():
@@ -179,7 +193,7 @@ def main():
     
     view = HmGui()
     view.show()
-
+    
     HmController(view=view)
     print(main_word)
     
