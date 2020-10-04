@@ -103,6 +103,9 @@ class HmGui(QMainWindow):
 
         self.inputLayout = QHBoxLayout()
         self.input.setFixedHeight(35)
+        font = self.input.font()      
+        font.setPointSize(16) 
+        self.input.setFont(font)
         self.label.setText("Enter your guess > ")
         self.inputLayout.addWidget(self.label)
         self.inputLayout.addWidget(self.input)
@@ -125,16 +128,16 @@ class HmGui(QMainWindow):
     	self.enter = QPushButton("ENTER")
     	self.quit = QPushButton("QUIT")
 
-    	self.cancel.setFixedSize(80, 40)
+    	self.cancel.setFixedSize(100, 40)
     	buttonsLayout.addWidget(self.cancel, 0, 0)
 
-    	self.hint.setFixedSize(80, 40)
+    	self.hint.setFixedSize(100, 40)
     	buttonsLayout.addWidget(self.hint, 0, 1)
 
-    	self.quit.setFixedSize(80, 40)
+    	self.quit.setFixedSize(100, 40)
     	buttonsLayout.addWidget(self.quit, 1, 0)
 
-    	self.enter.setFixedSize(80, 40)
+    	self.enter.setFixedSize(100, 40)
     	buttonsLayout.addWidget(self.enter, 1, 1)
 
     	self.generalLayout.addLayout(buttonsLayout)
