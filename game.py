@@ -6,7 +6,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QGridLayout, QMessageBox
 from PyQt5.QtWidgets import QLineEdit
 from PyQt5.QtWidgets import QPushButton
-from PyQt5.QtWidgets import QVBoxLayout
+from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout
 
 from functools import partial
 
@@ -90,6 +90,7 @@ class HmGui(QMainWindow):
     	# this method will create and put conmonents in their places
         self.display = QLineEdit()
         self.input = QLineEdit()
+        self.label = QLabel()
         self.user_info = QLabel()
         
         self.display.setFixedHeight(50)
@@ -100,7 +101,11 @@ class HmGui(QMainWindow):
         font.setPointSize(20)             
         self.display.setFont(font) 
 
+        self.inputLayout = QHBoxLayout()
         self.input.setFixedHeight(35)
+        self.label.setText("Enter your guess > ")
+        self.inputLayout.addWidget(self.label)
+        self.inputLayout.addWidget(self.input)
 
         self.user_info.setFixedHeight(35)
         font = self.user_info.font()      
@@ -110,7 +115,7 @@ class HmGui(QMainWindow):
 
         self.generalLayout.addWidget(self.display)
         self.generalLayout.addWidget(self.user_info)
-        self.generalLayout.addWidget(self.input)
+        self.generalLayout.addLayout(self.inputLayout)
 
     def _createButtons(self):
     	# this method creates the game buttons
