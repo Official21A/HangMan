@@ -118,12 +118,16 @@ class HmGui(QMainWindow):
     	self.cancel = QPushButton("DELETE")
     	self.hint = QPushButton("HINT")
     	self.enter = QPushButton("ENTER")
+    	self.quit = QPushButton("QUIT")
 
-    	self.cancel.setFixedSize(320, 40)
-    	buttonsLayout.addWidget(self.cancel, 0, 0, 1, 0)
+    	self.cancel.setFixedSize(80, 40)
+    	buttonsLayout.addWidget(self.cancel, 0, 0)
 
     	self.hint.setFixedSize(80, 40)
-    	buttonsLayout.addWidget(self.hint, 1, 0)
+    	buttonsLayout.addWidget(self.hint, 0, 1)
+
+    	self.quit.setFixedSize(80, 40)
+    	buttonsLayout.addWidget(self.quit, 1, 0)
 
     	self.enter.setFixedSize(80, 40)
     	buttonsLayout.addWidget(self.enter, 1, 1)
@@ -157,6 +161,7 @@ class HmController:
     def _connectSignals(self):
     	# this method adds the functions to its buttons
     	self._view.cancel.clicked.connect(self._view.clearDisplay)
+    	self._view.quit.clicked.connect(partial(self.click_btn, "quit()"))
     	self._view.hint.clicked.connect(partial(self.click_btn, "hint()"))
     	self._view.enter.clicked.connect(partial(self.click_btn, "@test"))
  
@@ -165,6 +170,8 @@ class HmController:
     	global game
     	if char == "@test":
     		char = self._view.input.text().lower()	
+    	if char == "quit()":
+    		sys.exit(0)	
     	__main_process__(char)
     	self._view.setDisplayText()
     	self._view.updateDisplay()
