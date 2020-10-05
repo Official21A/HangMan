@@ -75,9 +75,10 @@ class HmGui(QMainWindow):
         super().__init__()
         
         self.setWindowTitle('HangMan')
-        self.setFixedSize(600, 900)
+        self.setFixedSize(600, 500)
         
         self.generalLayout = QVBoxLayout()
+        self.generalLayout.setContentsMargins(10, 0, 0, 10)
         self._centralWidget = QWidget(self)
         self.setCentralWidget(self._centralWidget)
         self._centralWidget.setLayout(self.generalLayout)
@@ -109,6 +110,7 @@ class HmGui(QMainWindow):
         self.display.setAlignment(Qt.AlignCenter)
 
         self.inputLayout = QHBoxLayout()
+        self.inputLayout.setContentsMargins(0, 30, 10, 30)
         self.input.setFixedHeight(35)
         font = self.input.font()      
         font.setPointSize(16) 
