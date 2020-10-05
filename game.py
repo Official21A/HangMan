@@ -140,15 +140,19 @@ class HmGui(QMainWindow):
 
     	self.cancel.setFixedSize(100, 40)
     	buttonsLayout.addWidget(self.cancel, 0, 0)
+    	self.cancel.setStyleSheet("background-color:#ff3333");
 
     	self.hint.setFixedSize(100, 40)
     	buttonsLayout.addWidget(self.hint, 0, 1)
+    	self.hint.setStyleSheet("background-color:#66ffcc");
 
     	self.quit.setFixedSize(100, 40)
     	buttonsLayout.addWidget(self.quit, 1, 0)
+    	self.quit.setStyleSheet("background-color:#e60000");
 
     	self.enter.setFixedSize(100, 40)
     	buttonsLayout.addWidget(self.enter, 1, 1)
+    	self.enter.setStyleSheet("background-color:#4dff4d");
 
     	self.generalLayout.addLayout(buttonsLayout)
 
