@@ -7,6 +7,7 @@ from PyQt5.QtWidgets import QGridLayout, QMessageBox
 from PyQt5.QtWidgets import QLineEdit
 from PyQt5.QtWidgets import QPushButton
 from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout
+from PyQt5.QtGui import QIcon, QPixmap
 
 from functools import partial
 
@@ -74,7 +75,7 @@ class HmGui(QMainWindow):
         super().__init__()
         
         self.setWindowTitle('HangMan')
-        self.setFixedSize(500, 500)
+        self.setFixedSize(600, 900)
         
         self.generalLayout = QVBoxLayout()
         self._centralWidget = QWidget(self)
@@ -91,15 +92,21 @@ class HmGui(QMainWindow):
         self.display = QLineEdit()
         self.input = QLineEdit()
         self.label = QLabel()
+        self.imageLabel = QLabel()
         self.user_info = QLabel()
+
+        self.image = QPixmap("logo.png");
+        self.image = self.image.scaled(500, 200)
+        self.imageLabel.setPixmap(self.image)
+        self.imageLabel.setAlignment(Qt.AlignCenter)
         
-        self.display.setFixedHeight(50)
-        self.display.setFixedWidth(480)
-        self.display.setAlignment(Qt.AlignCenter)
+        self.display.setFixedHeight(100)
+        self.display.setFixedWidth(580)
         self.display.setReadOnly(True)
         font = self.display.font()   
         font.setPointSize(20)             
         self.display.setFont(font) 
+        self.display.setAlignment(Qt.AlignCenter)
 
         self.inputLayout = QHBoxLayout()
         self.input.setFixedHeight(35)
@@ -116,6 +123,7 @@ class HmGui(QMainWindow):
         self.user_info.setFont(font)
         self.user_info.setAlignment(Qt.AlignCenter)
 
+        self.generalLayout.addWidget(self.imageLabel)
         self.generalLayout.addWidget(self.display)
         self.generalLayout.addWidget(self.user_info)
         self.generalLayout.addLayout(self.inputLayout)
