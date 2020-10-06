@@ -6,63 +6,11 @@ from PyQt5.QtWidgets import QPushButton
 from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout
 from PyQt5.QtGui import QIcon, QPixmap
 
-from random_words import RandomWords
-from functools import partial
 import sys
-
-import headers as H
-
-
-# to create a database of words in each game
-r = RandomWords() 
-
-game = True
-counter = 0
-game_limit = 0
-
-main_word = r.random_word() # choose one word from data base
-word_len = len(main_word)
-game_limit = 2 * word_len
-game_hints = int(word_len / 2)
-# we use boolean indexing for showing the words in output
-bool_index = [False for i in range(2 * word_len)]
-
-
-def __main_process__(input_string): # the game model
-	global game, counter, game_limit, game_hints, main_word, bool_index 
-
-	if len(input_string) == 1: # if user input was a single char
-		indexes = H.search(main_word, input_string)
-
-		if len(indexes) != 0:
-			H.update(bool_index, indexes)
-			counter += len(indexes)
-	else: # less or more than one words compare differently
-
-		if input_string == main_word:
-		    H.game_done(bool_index)
-		    game = False	
-		elif input_string == "hint()": # using the hints
-			if game_hints > 0:
-				H.hint(bool_index, main_word)	
-				game_hints -= 1
-				game_limit += 1
-				counter += 1
-			else:
-				return	
-
-	if counter == word_len:
-		game = False
-
-	if game_limit == 0:
-		game = False
-		game_limit += 1
-
-	game_limit -= 1	
 
 
 class GameView(QMainWindow): # the game view
-    def __init__(self): # class initializer
+    def __init__(self, game_limit, game_hints, string): # class initializer
         super().__init__()
         
         self.setWindowTitle('Hang Man')
@@ -79,8 +27,8 @@ class GameView(QMainWindow): # the game view
         self.__create_display__() # managing the components
         self.__create_buttons__()
 
-        self.setDisplayText()
-        self.updateDisplay()
+        self.setDisplayText(string)
+        self.updateDisplay(game_limit, game_hints)
 
     def __create_display__(self):
     	# this method will create and put components in their places
@@ -164,57 +112,25 @@ class GameView(QMainWindow): # the game view
 
     	self.generalLayout.addLayout(buttonsLayout)
 
-    def setDisplayText(self):
+    def setDisplayText(self, string):
     	# a method for updating the display after each iterate
-        global main_word, bool_index
-        self.display.setText(H.word_output(main_word, bool_index))
+        self.display.setText(string)
         self.input.setFocus()
 
     def clearDisplay(self):
     	# clear input
         self.input.setText('')
 
-    def updateDisplay(self):
+    def updateDisplay(self, game_limit, game_hints):
     	# this method updates the user information
     	string = f">> {game_limit} Turns remain <<" 
     	self.hint.setText(f"{game_hints} Hints")
     	self.user_info.setText(string)  
 
 
-class Controller: # game controller
-    def __init__(self, view): # class initializer
-        self._view = view
-        self.dialog = Dialog()
-        self._connectSignals()
-
-    def _connectSignals(self):
-    	# this method adds the functions to its buttons
-    	self._view.cancel.clicked.connect(self._view.clearDisplay)
-    	self._view.quit.clicked.connect(partial(self.click_btn, "quit()"))
-    	self._view.hint.clicked.connect(partial(self.click_btn, "hint()"))
-    	self._view.enter.clicked.connect(partial(self.click_btn, "get()"))
- 
-    def click_btn(self, input_string): # handel the button clicked
-    	global game
-
-    	if input_string == "get()":
-    		input_string = self._view.input.text().lower()	
-    	elif input_string == "quit()":
-    		sys.exit(0)
-
-    	__main_process__(input_string)
-
-    	self._view.setDisplayText()
-    	self._view.updateDisplay()
-    	self._view.clearDisplay()
-
-    	if not game:
-    		self.dialog.show()	
-
-
 class Dialog: # this class showsup when the game is over	 	
-	def show(self):
-		global main_word
+	def show(self, main_word):
+		self.main_word = main_word
 
 		msg = QMessageBox()
 		msg.setIcon(QMessageBox.Information)
@@ -225,21 +141,3 @@ class Dialog: # this class showsup when the game is over
 
 		msg.exec_()
 		msg.buttonClicked.connect(sys.exit(0))  	
-
-
-def main():
-	# program runner
-    global main_word
-    hm_app = QApplication(sys.argv)
-    
-    view = GameView()
-    view.show()
-    
-    Controller(view=view)
-    print(main_word)
-    
-    sys.exit(hm_app.exec_())
-
-
-if __name__ == '__main__':
-    main() # Execute    
