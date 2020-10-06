@@ -42,7 +42,7 @@ def __main_process__(input_string): # the game model
 		if input_string == main_word:
 		    H.game_done(bool_index)
 		    game = False	
-        elif input_string == "hint()": # using the hints
+		elif input_string == "hint()": # using the hints
 			if game_hints > 0:
 				H.hint(bool_index, main_word)	
 				game_hints -= 1
@@ -91,8 +91,8 @@ class GameView(QMainWindow): # the game view
         self.imageLabel = QLabel()
         self.user_info = QLabel()
 
-        __create_logo__()
-        __set_fonts__()
+        self.__create_logo__()
+        self.__set_fonts__()
         
         self.display.setFixedHeight(100)
         self.display.setFixedWidth(580)
@@ -121,10 +121,10 @@ class GameView(QMainWindow): # the game view
         self.imageLabel.setAlignment(Qt.AlignCenter) 
 
     def __set_fonts__(self):
-    	# this method sets the font sizes of the components
-    	display_size, normal_size = 20, 16
+        # this method sets the font sizes of the components
+        display_size, normal_size = 20, 16
 
-    	font = self.display.font()   
+        font = self.display.font()   
         font.setPointSize(display_size)             
         self.display.setFont(font)
 
@@ -146,19 +146,19 @@ class GameView(QMainWindow): # the game view
     	self.enter = QPushButton("ENTER")
     	self.quit = QPushButton("QUIT")
 
-    	self.cancel.setFixedSize(size_tuple)
+    	self.cancel.setFixedSize(size_tuple[0], size_tuple[1])
     	buttonsLayout.addWidget(self.cancel, 0, 0)
     	self.cancel.setStyleSheet("background-color:#ff3333");
 
-    	self.hint.setFixedSize(size_tuple)
+    	self.hint.setFixedSize(size_tuple[0], size_tuple[1])
     	buttonsLayout.addWidget(self.hint, 0, 1)
     	self.hint.setStyleSheet("background-color:#ffff66");
 
-    	self.quit.setFixedSize(size_tuple)
+    	self.quit.setFixedSize(size_tuple[0], size_tuple[1])
     	buttonsLayout.addWidget(self.quit, 1, 0)
     	self.quit.setStyleSheet("background-color:#e60000");
 
-    	self.enter.setFixedSize(size_tuple)
+    	self.enter.setFixedSize(size_tuple[0], size_tuple[1])
     	buttonsLayout.addWidget(self.enter, 1, 1)
     	self.enter.setStyleSheet("background-color:#4dff4d");
 
@@ -222,7 +222,7 @@ class Dialog: # this class showsup when the game is over
 		msg.setWindowTitle("HangMan")
 
 		msg.setStandardButtons(QMessageBox.Ok)
-		 
+
 		msg.exec_()
 		msg.buttonClicked.connect(sys.exit(0))  	
 
