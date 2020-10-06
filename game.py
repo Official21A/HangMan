@@ -131,6 +131,7 @@ class HmGui(QMainWindow):
         self.generalLayout.addLayout(self.inputLayout)
 
     def _createButtons(self):
+    	global game_hints
     	# this method creates the game buttons
     	buttonsLayout = QGridLayout()
     	self.cancel = QPushButton("DELETE")
@@ -144,7 +145,7 @@ class HmGui(QMainWindow):
 
     	self.hint.setFixedSize(100, 40)
     	buttonsLayout.addWidget(self.hint, 0, 1)
-    	self.hint.setStyleSheet("background-color:#66ffcc");
+    	self.hint.setStyleSheet("background-color:#ffff66");
 
     	self.quit.setFixedSize(100, 40)
     	buttonsLayout.addWidget(self.quit, 1, 0)
