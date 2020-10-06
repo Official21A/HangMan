@@ -207,20 +207,22 @@ class Controller: # game controller
     	self._view.setDisplayText()
     	self._view.updateDisplay()
     	self._view.clearDisplay()
-    	
+
     	if not game:
     		self.dialog.show()	
 
 
-class Dialog:	 	
-
+class Dialog: # this class showsup when the game is over	 	
 	def show(self):
 		global main_word
+
 		msg = QMessageBox()
 		msg.setIcon(QMessageBox.Information)
 		msg.setText(f"The word was \"{main_word}\". Press OK to quit.")
 		msg.setWindowTitle("HangMan")
-		msg.setStandardButtons(QMessageBox.Ok) 
+
+		msg.setStandardButtons(QMessageBox.Ok)
+		 
 		msg.exec_()
 		msg.buttonClicked.connect(sys.exit(0))  	
 
