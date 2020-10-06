@@ -181,9 +181,8 @@ class GameView(QMainWindow): # the game view
     	self.user_info.setText(string)  
 
 
-class HmController:
-	# game controller
-    def __init__(self, view):
+class Controller: # game controller
+    def __init__(self, view): # class initializer
         self._view = view
         self.dialog = Dialog()
         self._connectSignals()
@@ -193,19 +192,22 @@ class HmController:
     	self._view.cancel.clicked.connect(self._view.clearDisplay)
     	self._view.quit.clicked.connect(partial(self.click_btn, "quit()"))
     	self._view.hint.clicked.connect(partial(self.click_btn, "hint()"))
-    	self._view.enter.clicked.connect(partial(self.click_btn, "@test"))
+    	self._view.enter.clicked.connect(partial(self.click_btn, "get()"))
  
-    def click_btn(self, char):
-    	# handel the button clicked
+    def click_btn(self, input_string): # handel the button clicked
     	global game
-    	if char == "@test":
-    		char = self._view.input.text().lower()	
-    	if char == "quit()":
-    		sys.exit(0)	
-    	__main_process__(char)
+
+    	if input_string == "get()":
+    		input_string = self._view.input.text().lower()	
+    	elif input_string == "quit()":
+    		sys.exit(0)
+
+    	__main_process__(input_string)
+
     	self._view.setDisplayText()
     	self._view.updateDisplay()
     	self._view.clearDisplay()
+    	
     	if not game:
     		self.dialog.show()	
 
@@ -231,7 +233,7 @@ def main():
     view = GameView()
     view.show()
     
-    HmController(view=view)
+    Controller(view=view)
     print(main_word)
     
     sys.exit(hm_app.exec_())
