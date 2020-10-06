@@ -1,6 +1,3 @@
-from random_words import RandomWords
-import sys
-
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QLabel
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QGridLayout, QMessageBox
@@ -9,48 +6,43 @@ from PyQt5.QtWidgets import QPushButton
 from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout
 from PyQt5.QtGui import QIcon, QPixmap
 
+from random_words import RandomWords
 from functools import partial
+import sys
 
 import headers as H
 
 
-r = RandomWords() # data words for the game
+# to create a database of words in each game
+r = RandomWords() 
 
 game = True
 counter = 0
 game_limit = 0
 
-main_word = r.random_word()
+main_word = r.random_word() # choose one word from data base
 word_len = len(main_word)
 game_limit = 2 * word_len
 game_hints = int(word_len / 2)
+# we use boolean indexing for showing the words in output
 bool_index = [False for i in range(2 * word_len)]
 
 
-def __main_process__(char):
-	# the game model
-
+def __main_process__(input_string): # the game model
 	global game, counter, game_limit, game_hints, main_word, bool_index 
 
-	if not game:
-		# this is when the user is out of turns or the user gussed the word
-		return 
-
-	if len(char) == 1:
-		# if user input was a single char
-		indexes = H.search(main_word, char)
+	if len(input_string) == 1: # if user input was a single char
+		indexes = H.search(main_word, input_string)
 
 		if len(indexes) != 0:
 			H.update(bool_index, indexes)
 			counter += len(indexes)
-	else:
-		# less or more than one words compare differently
-		if char == main_word:
+	else: # less or more than one words compare differently
+
+		if input_string == main_word:
 		    H.game_done(bool_index)
 		    game = False	
-
-		if char == "hint()":
-			# using the hints
+        elif input_string == "hint()": # using the hints
 			if game_hints > 0:
 				H.hint(bool_index, main_word)	
 				game_hints -= 1
@@ -69,60 +61,51 @@ def __main_process__(char):
 	game_limit -= 1	
 
 
-class HmGui(QMainWindow):
-	# the game view
-    def __init__(self):
+class GameView(QMainWindow): # the game view
+    def __init__(self): # class initializer
         super().__init__()
         
-        self.setWindowTitle('HangMan')
+        self.setWindowTitle('Hang Man')
         self.setFixedSize(600, 500)
         
-        self.generalLayout = QVBoxLayout()
-        self.generalLayout.setContentsMargins(10, 0, 0, 10)
-        self._centralWidget = QWidget(self)
+        self.generalLayout = QVBoxLayout() # the window base layout
+
+        self._centralWidget = QWidget(self) # need to add this to centera
         self.setCentralWidget(self._centralWidget)
+
+        self.generalLayout.setContentsMargins(10, 0, 0, 10)
         self._centralWidget.setLayout(self.generalLayout)
         
-        self._createDisplay()
-        self._createButtons()
+        self.__create_display__() # managing the components
+        self.__create_buttons__()
+
         self.setDisplayText()
         self.updateDisplay()
 
-    def _createDisplay(self):
-    	# this method will create and put conmonents in their places
+    def __create_display__(self):
+    	# this method will create and put components in their places
         self.display = QLineEdit()
+        self.inputLayout = QHBoxLayout()
         self.input = QLineEdit()
         self.label = QLabel()
         self.imageLabel = QLabel()
         self.user_info = QLabel()
 
-        self.image = QPixmap("logo.png");
-        self.image = self.image.scaled(500, 200)
-        self.imageLabel.setPixmap(self.image)
-        self.imageLabel.setAlignment(Qt.AlignCenter)
+        __create_logo__()
+        __set_fonts__()
         
         self.display.setFixedHeight(100)
         self.display.setFixedWidth(580)
         self.display.setReadOnly(True)
-        font = self.display.font()   
-        font.setPointSize(20)             
-        self.display.setFont(font) 
         self.display.setAlignment(Qt.AlignCenter)
 
-        self.inputLayout = QHBoxLayout()
         self.inputLayout.setContentsMargins(0, 30, 10, 30)
         self.input.setFixedHeight(35)
-        font = self.input.font()      
-        font.setPointSize(16) 
-        self.input.setFont(font)
-        self.label.setText("Enter your guess > ")
+        self.label.setText("Enter your guess : ")
         self.inputLayout.addWidget(self.label)
         self.inputLayout.addWidget(self.input)
 
         self.user_info.setFixedHeight(35)
-        font = self.user_info.font()      
-        font.setPointSize(16) 
-        self.user_info.setFont(font)
         self.user_info.setAlignment(Qt.AlignCenter)
 
         self.generalLayout.addWidget(self.imageLabel)
@@ -130,28 +113,52 @@ class HmGui(QMainWindow):
         self.generalLayout.addWidget(self.user_info)
         self.generalLayout.addLayout(self.inputLayout)
 
-    def _createButtons(self):
-    	global game_hints
+    def __create_logo__(self): 
+    	# this method creates the game top logo
+        self.image = QPixmap("logo.png");
+        self.image = self.image.scaled(500, 200)
+        self.imageLabel.setPixmap(self.image)
+        self.imageLabel.setAlignment(Qt.AlignCenter) 
+
+    def __set_fonts__(self):
+    	# this method sets the font sizes of the components
+    	display_size, normal_size = 20, 16
+
+    	font = self.display.font()   
+        font.setPointSize(display_size)             
+        self.display.setFont(font)
+
+        font = self.input.font()      
+        font.setPointSize(normal_size) 
+        self.input.setFont(font)
+
+        font = self.user_info.font()      
+        font.setPointSize(normal_size) 
+        self.user_info.setFont(font)
+
+    def __create_buttons__(self):
     	# this method creates the game buttons
+    	size_tuple = (100, 40)
+
     	buttonsLayout = QGridLayout()
     	self.cancel = QPushButton("DELETE")
     	self.hint = QPushButton("HINT")
     	self.enter = QPushButton("ENTER")
     	self.quit = QPushButton("QUIT")
 
-    	self.cancel.setFixedSize(100, 40)
+    	self.cancel.setFixedSize(size_tuple)
     	buttonsLayout.addWidget(self.cancel, 0, 0)
     	self.cancel.setStyleSheet("background-color:#ff3333");
 
-    	self.hint.setFixedSize(100, 40)
+    	self.hint.setFixedSize(size_tuple)
     	buttonsLayout.addWidget(self.hint, 0, 1)
     	self.hint.setStyleSheet("background-color:#ffff66");
 
-    	self.quit.setFixedSize(100, 40)
+    	self.quit.setFixedSize(size_tuple)
     	buttonsLayout.addWidget(self.quit, 1, 0)
     	self.quit.setStyleSheet("background-color:#e60000");
 
-    	self.enter.setFixedSize(100, 40)
+    	self.enter.setFixedSize(size_tuple)
     	buttonsLayout.addWidget(self.enter, 1, 1)
     	self.enter.setStyleSheet("background-color:#4dff4d");
 
@@ -221,7 +228,7 @@ def main():
     global main_word
     hm_app = QApplication(sys.argv)
     
-    view = HmGui()
+    view = GameView()
     view.show()
     
     HmController(view=view)
