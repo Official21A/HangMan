@@ -137,7 +137,10 @@ class Dialog: # this class showsup when the game is over
 		msg.setText(f"The word was \"{main_word}\". Press OK to quit.")
 		msg.setWindowTitle("HangMan")
 
-		msg.setStandardButtons(QMessageBox.Ok)
+		msg.setStandardButtons(QMessageBox.Ok | QMessageBox.Close)
 
-		msg.exec_()
-		msg.buttonClicked.connect(sys.exit(0))  	
+		result = msg.exec_()
+		if result == QMessageBox.Ok:
+			return "restart()"
+		else:
+			sys.exit()		

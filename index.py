@@ -14,6 +14,7 @@ def __start__():
 	# this function creates the start needs of the game
 	global game, counter, game_limit, main_word, word_len
 	global game_hints, bool_index, r
+
 	game = True
 	counter = 0
 	game_limit = 0
@@ -87,21 +88,27 @@ class Controller: # game controller
     	self._view.clearDisplay()
 
     	if not game:
-    		self.dialog.show(main_word)	
-
+    		result = self.dialog.show(main_word)	
+    		if result == "restart()":
+    			self._view.close()
+    			  
 
 def main():
 	# program runner
     global main_word, game_limit, game_hints, bool_index
+
     hm_app = QApplication(sys.argv)
     
-    view = GameView(game_limit,game_hints,H.word_output(main_word, bool_index))
-    view.show()
+    while True:
+    	view = GameView(game_limit,game_hints,H.word_output(main_word, bool_index))
+    	view.show()
     
-    Controller(view=view)
-    print(main_word)
+    	Controller(view=view)
+    	print(main_word)
     
-    sys.exit(hm_app.exec_())
+    	hm_app.exec_()
+
+    	__start__() 
 
 
 if __name__ == '__main__':
