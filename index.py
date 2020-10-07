@@ -3,23 +3,27 @@ from random_words import RandomWords
 from functools import partial
 import sys
 
-import headers as H
+import models as H
 from view import GameView, Dialog
 
 
 # to create a database of words in each game
 r = RandomWords() 
 
-game = True
-counter = 0
-game_limit = 0
+def __start__():
+	# this function creates the start needs of the game
+	global game, counter, game_limit, main_word, word_len
+	global game_hints, bool_index, r
+	game = True
+	counter = 0
+	game_limit = 0
 
-main_word = r.random_word() # choose one word from data base
-word_len = len(main_word)
-game_limit = 2 * word_len
-game_hints = int(word_len / 2)
-# we use boolean indexing for showing the words in output
-bool_index = [False for i in range(2 * word_len)]
+	main_word = r.random_word() # choose one word from data base
+	word_len = len(main_word)
+	game_limit = 2 * word_len
+	game_hints = int(word_len / 2)
+	# we use boolean indexing for showing the words in output
+	bool_index = [False for i in range(2 * word_len)]
 
 
 def __main_process__(input_string): # the game model
@@ -101,4 +105,5 @@ def main():
 
 
 if __name__ == '__main__':
+    __start__()
     main() # Execute    
