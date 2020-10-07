@@ -63,7 +63,7 @@ class GameView(QMainWindow): # the game view
 
     def __create_logo__(self): 
     	# this method creates the game top logo
-        self.image = QPixmap("logo.png");
+        self.image = QPixmap("img/logo.png");
         self.image = self.image.scaled(500, 200)
         self.imageLabel.setPixmap(self.image)
         self.imageLabel.setAlignment(Qt.AlignCenter) 
