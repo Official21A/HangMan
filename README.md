@@ -55,5 +55,7 @@ from gui and gives it to model and recives response from model and the gives it 
 So these three parts are everything we used in this project.
 
 # Better Design
+To test it yourself I recommed to rewrite this project without MVC design, to see the benefits of this design usage.
+This project is to learn to work with pyQt and how to create a suitable user interface in python.
 
 Contact me at : najafizadeh21@gmail.com or officialamirhossein21@gmail.com
