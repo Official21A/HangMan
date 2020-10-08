@@ -10,7 +10,8 @@ import sys
 
 
 class GameView(QMainWindow): # the game view
-    def __init__(self, game_limit, game_hints, string): # class initializer
+    def __init__(self, game_limit, game_hints, game_score, string): 
+        # class initializer
         super().__init__()
         
         self.setWindowTitle('Hang Man')
@@ -28,7 +29,7 @@ class GameView(QMainWindow): # the game view
         self.__create_buttons__()
 
         self.setDisplayText(string)
-        self.updateDisplay(game_limit, game_hints)
+        self.updateDisplay(game_limit, game_hints, game_score)
 
     def __create_display__(self):
     	# this method will create and put components in their places
@@ -57,8 +58,8 @@ class GameView(QMainWindow): # the game view
         self.user_info.setAlignment(Qt.AlignCenter)
 
         self.generalLayout.addWidget(self.imageLabel)
-        self.generalLayout.addWidget(self.display)
         self.generalLayout.addWidget(self.user_info)
+        self.generalLayout.addWidget(self.display)
         self.generalLayout.addLayout(self.inputLayout)
 
     def __create_logo__(self): 
@@ -121,9 +122,9 @@ class GameView(QMainWindow): # the game view
     	# clear input
         self.input.setText('')
 
-    def updateDisplay(self, game_limit, game_hints):
+    def updateDisplay(self, game_limit, game_hints, game_score):
     	# this method updates the user information
-    	string = f">> {game_limit} Turns remain <<" 
+    	string = f"> Your score: {game_score} :: {game_limit} Turns remain <" 
     	self.hint.setText(f"{game_hints} Hints")
     	self.user_info.setText(string)  
 

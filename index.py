@@ -9,6 +9,7 @@ from view import GameView, Dialog
 
 # to create a database of words in each game
 r = RandomWords() 
+game_score = 0;
 
 def __start__():
 	# this function creates the start needs of the game
@@ -29,6 +30,7 @@ def __start__():
 
 def __main_process__(input_string): # the game model
 	global game, counter, game_limit, game_hints, main_word, bool_index 
+	global game_score
 
 	if len(input_string) == 1: # if user input was a single char
 		indexes = H.search(main_word, input_string)
@@ -40,6 +42,7 @@ def __main_process__(input_string): # the game model
 
 		if input_string == main_word:
 		    H.game_done(bool_index)
+		    game_score += game_hints
 		    game = False	
 		elif input_string == "hint()": # using the hints
 			if game_hints > 0:
@@ -51,6 +54,7 @@ def __main_process__(input_string): # the game model
 				return	
 
 	if counter == word_len:
+		game_score += 1
 		game = False
 
 	if game_limit == 0:
@@ -74,7 +78,7 @@ class Controller: # game controller
     	self._view.enter.clicked.connect(partial(self.click_btn, "get()"))
  
     def click_btn(self, input_string): # handel the button clicked
-    	global game, main_word, bool_index, game_limit, game_hints
+    	global game, main_word, bool_index, game_limit, game_hints, game_score
 
     	if input_string == "get()":
     		input_string = self._view.input.text().lower()	
@@ -84,7 +88,7 @@ class Controller: # game controller
     	__main_process__(input_string)
 
     	self._view.setDisplayText(H.word_output(main_word, bool_index))
-    	self._view.updateDisplay(game_limit, game_hints)
+    	self._view.updateDisplay(game_limit, game_hints, game_score)
     	self._view.clearDisplay()
 
     	if not game:
@@ -95,12 +99,13 @@ class Controller: # game controller
 
 def main():
 	# program runner
-    global main_word, game_limit, game_hints, bool_index
+    global main_word, game_limit, game_hints, bool_index, game_score
 
     hm_app = QApplication(sys.argv)
     
     while True:
-    	view = GameView(game_limit,game_hints,H.word_output(main_word, bool_index))
+    	view = GameView(game_limit,game_hints,game_score,
+    					H.word_output(main_word, bool_index))
     	view.show()
     
     	Controller(view=view)
