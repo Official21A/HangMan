@@ -38,6 +38,21 @@ pip install PyQt5==5.9.2
 ```
 
 # How it works
+Our project uses MVC model. So the "view.py" is our user interface file, where we keep the codes
+of creating the window that user sees and getting the users inputs.
+
+Most of the programs pyQt usage is in this file.
+
+Next we have the models file, where we keep the games functions. These functions are special part
+of the program, cause without theme the game does not work correctly.
+If you want to get a good idea of how to write a model file, check this file.
+
+And the last but not least, the index file. Index file containes a main_process function and a controller
+to get the users inputs and send them to game functions to process the data and will come with a responed
+based on what the user gives. The controller will have a third person role in this program, it gets data
+from gui and gives it to model and recives response from model and the gives it back to gui.
+
+So these three parts are everything we used in this project.
 
 # Better Design
 
