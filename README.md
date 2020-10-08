@@ -19,6 +19,23 @@ https://realpython.com/python-pyqt-gui-calculator/
 ```
 
 # Tools
+All tools we need for this project is the pyQt library with sys library which is installed, but pyQt
+is not installed on your systems, so you have to install it.
+
+Just follow these steps:
+
+1.
+```
+python3 -m venv venv 
+```
+2.
+```
+source venv/bin/activate
+```
+3.
+```
+pip install PyQt5==5.9.2
+```
 
 # How it works
 
