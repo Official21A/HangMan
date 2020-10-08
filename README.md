@@ -2,6 +2,21 @@
 The old hangman game with python "Qt" user interface.
 
 # Introduction
+Welcome to the old Hangman game, where you need to guess a word by letters or itself.
+The game itself is easy and basically you can write it into a consol page, but
+in this project I used the python Qt which is a user interface, so the game bacomes more
+like a computer game.
+
+Designed very easily that you can clone the project and read the codes without any helps.
+I tried to use all of a GUI components that we need in a program in this codes.
+
+If you want to know all the components and get a complete knowledge about pyQt check these links:
+```
+
+https://build-system.fman.io/pyqt5-tutorial
+https://realpython.com/python-pyqt-gui-calculator/
+
+```
 
 # Tools
 
